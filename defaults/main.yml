@@ -1,0 +1,17 @@
+---
+# defaults file for openstack-vm
+
+openstack_vm_name: "{{ inventory_hostname }}"
+
+openstack_vm_memory: 1280
+
+# image is required
+openstack_vm_image: "{{ omit }}"
+openstack_vm_network: "{{ omit }}"
+openstack_vm_key_name: "{{ omit }}"
+
+# api connection details
+openstack_vm_validate_certs: "{{ omit }}"
+
+# return value
+openstack_vm_instance_ip: "{{ openstack_vm_server.server.interface_ip }}"
