@@ -5,6 +5,8 @@
     name: "{{ openstack_vm_name }}"
     flavor_ram: "{{ openstack_vm_memory }}"
     image: "{{ openstack_vm_image }}"
+    boot_from_volume: "{{ openstack_vm_disk_size | int != 0 }}"
+    volume_size: "{{ openstack_vm_disk_size }}"
     validate_certs: "{{ openstack_vm_validate_certs }}"
     network: "{{ openstack_vm_network }}"
     key_name: "{{ openstack_vm_key_name_effective }}"

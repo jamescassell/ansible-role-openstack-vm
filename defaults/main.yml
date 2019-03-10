@@ -3,7 +3,9 @@
 
 openstack_vm_name: "{{ inventory_hostname }}"
 
+# VM resources
 openstack_vm_memory: 1280
+openstack_vm_disk_size: "{{ omit }}"
 
 # image is required
 openstack_vm_image: "{{ omit }}"
