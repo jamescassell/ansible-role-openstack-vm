@@ -1,0 +1,8 @@
+---
+
+- name: list user keys
+  command: openstack{{ (openstack_vm_validate_certs or openstack_vm_validate_certs == omit) | ternary('', ' --insecure') }}
+      keypair list -f json
+  check_mode: no
+  changed_when: no
+  register: openstack_vm_key_query

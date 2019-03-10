@@ -1,0 +1,8 @@
+---
+# vars file for openstack-vm
+
+openstack_vm_user_keys: "{{ openstack_vm_key_query.stdout | default('[]') | from_json }}"
+
+openstack_vm_key_name_effective: "{{ (openstack_vm_key_name == omit) | ternary(
+    (openstack_vm_user_keys[0] | default({})).Name | default(omit),
+    openstack_vm_key_name) }}"

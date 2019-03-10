@@ -1,6 +1,10 @@
 ---
 # tasks file for openstack-vm
 
+- name: discover user key if not set explicitly
+  import_tasks: user-key.yml
+  when: openstack_vm_key_name == omit
+
 - name: server exists
   block:
   - name: server exists
