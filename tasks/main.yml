@@ -1,15 +1,28 @@
 ---
 # tasks file for openstack-vm
 
-- name: create server
-  os_server:
-    name: "{{ openstack_vm_name }}"
-    flavor_ram: "{{ openstack_vm_memory }}"
-    image: "{{ openstack_vm_image }}"
-    validate_certs: "{{ openstack_vm_validate_certs }}"
-    network: "{{ openstack_vm_network }}"
-    key_name: "{{ openstack_vm_key_name }}"
-  register: openstack_vm_server
+- name: server exists
+  block:
+  - name: server exists
+    import_tasks: server.yml
+
+  rescue:
+  - name: role only knows how to handle network failures
+    fail:
+      msg: the caught failure was not network related
+    when: "'Multiple possible networks found' not in openstack_vm_server.msg"
+
+  - name: gather network facts
+    os_networks_facts:
+      validate_certs: "{{ openstack_vm_validate_certs }}"
+    register: openstack_vm_networks_facts
+
+  - name: server exists with first non-external network
+    import_tasks: server.yml
+    vars:
+      openstack_vm_network: "{{ openstack_vm_networks_facts.ansible_facts.openstack_networks | json_query(net_query) | first }}"
+      net_query: >-
+        [?"router:external"!=`true`].name
 
 - name: show VM ip
   debug:
