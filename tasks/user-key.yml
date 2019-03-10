@@ -6,3 +6,15 @@
   check_mode: no
   changed_when: no
   register: openstack_vm_key_query
+
+- name: upload public key to openstack
+  os_keypair:
+    name: "{{ lookup('env', 'OS_USERNAME') | default(ansible_user, true) | default(lookup('env', 'USER')) }}-ansible"
+    public_key: "{{ lookup_key }}"
+    validate_certs: "{{ openstack_vm_validate_certs }}"
+  register: openstack_vm_key_upload
+  when:
+  - openstack_vm_user_keys | length == 0
+  - lookup_key != ""
+  vars:
+    lookup_key: "{{ lookup('pipe', 'ssh-add -L 2>/dev/null || cat ~/.ssh/id_rsa.pub || true') }}"
